@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -31,18 +32,20 @@ public class UserServiceImplementation implements UserService {
     }
     @Override
     public UserDto getUserById(Long id){
-        User user = userRespository.findById(id).get();
+        Optional<User> optionalUser = userRespository.findById(id);
+        User user = optionalUser.get();
         UserDto userDto = UserMapper.mapToUserDto(user);
         return userDto;
     }
     @Override
     public List<UserDto> getAllUsers(){
         List<User> allUsers = userRespository.findAll();
-        List<UserDto> allUsersDto = new ArrayList<>();
-        for(User user : allUsers) {
-            UserDto userDto = UserMapper.mapToUserDto(user);
-            allUsersDto.add(userDto);
-        }
+        List<UserDto> allUsersDto = allUsers.stream().map(UserMapper::mapToUserDto).toList();
+//        List<UserDto> allUsersDto = new ArrayList<>();
+//        for(User user : allUsers) {
+//            UserDto userDto = UserMapper.mapToUserDto(user);
+//            allUsersDto.add(userDto);
+//        }
         return allUsersDto;
     }
     @Override
