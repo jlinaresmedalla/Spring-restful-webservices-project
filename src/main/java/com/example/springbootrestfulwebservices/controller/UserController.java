@@ -1,6 +1,8 @@
 package com.example.springbootrestfulwebservices.controller;
 
+import com.example.springbootrestfulwebservices.dto.UserDto;
 import com.example.springbootrestfulwebservices.entity.User;
+import com.example.springbootrestfulwebservices.mapper.UserMapper;
 import com.example.springbootrestfulwebservices.service.implementation.UserServiceImplementation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,26 +19,26 @@ public class UserController {
     private UserServiceImplementation userServiceImplementation;
 
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userServiceImplementation.createUser(user);
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
+        UserDto createdUser = userServiceImplementation.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userServiceImplementation.getUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        UserDto userDto = userServiceImplementation.getUserById(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userServiceImplementation.getAllUsers();
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = userServiceImplementation.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUserById(@PathVariable Long id, @RequestBody User user) {
-        User updatedUser = userServiceImplementation.updateUserById(id, user);
+    public ResponseEntity<UserDto> updateUserById(@PathVariable Long id, @RequestBody UserDto user) {
+        UserDto updatedUser = userServiceImplementation.updateUserById(id, user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 

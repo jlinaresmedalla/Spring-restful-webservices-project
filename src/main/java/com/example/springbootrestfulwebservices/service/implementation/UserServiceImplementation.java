@@ -1,11 +1,14 @@
 package com.example.springbootrestfulwebservices.service.implementation;
 
+import com.example.springbootrestfulwebservices.dto.UserDto;
 import com.example.springbootrestfulwebservices.entity.User;
+import com.example.springbootrestfulwebservices.mapper.UserMapper;
 import com.example.springbootrestfulwebservices.repository.UserRespository;
 import com.example.springbootrestfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,31 +19,44 @@ public class UserServiceImplementation implements UserService {
     //instead of field injection which is a better practice and this class has only one attribute or argument in the constructor
     private UserRespository userRespository;
 
+
     @Override
-    public User createUser(User user) {
-        return userRespository.save(user);
+    public UserDto createUser(UserDto userDto) {
+        //Convert UserDto to User entity object JPA
+        User user = UserMapper.mapToUser(userDto);
+        User createdUser = userRespository.save(user);
+        //Convert User entity object JPA to UserDto
+        UserDto createdUserDto = UserMapper.mapToUserDto(createdUser);
+        return createdUserDto;
     }
     @Override
-    public User getUserById(Long id){
-        return userRespository.findById(id).get();
+    public UserDto getUserById(Long id){
+        User user = userRespository.findById(id).get();
+        UserDto userDto = UserMapper.mapToUserDto(user);
+        return userDto;
     }
     @Override
-    public List<User> getAllUsers(){
-        return userRespository.findAll();
+    public List<UserDto> getAllUsers(){
+        List<User> allUsers = userRespository.findAll();
+        List<UserDto> allUsersDto = new ArrayList<>();
+        for(User user : allUsers) {
+            UserDto userDto = UserMapper.mapToUserDto(user);
+            allUsersDto.add(userDto);
+        }
+        return allUsersDto;
     }
     @Override
-    public User updateUserById(Long id, User user){
+    public UserDto updateUserById(Long id, UserDto userDto){
         User userByID = userRespository.findById(id).get();
-        userByID.setFirstName(user.getFirstName());
-        userByID.setLastName(user.getLastName());
-        userByID.setEmail(user.getEmail());
-        return userRespository.save(userByID);
+        userByID.setFirstName(userDto.getFirstName());
+        userByID.setLastName(userDto.getLastName());
+        userByID.setEmail(userDto.getEmail());
+        UserDto updatedUserDto = UserMapper.mapToUserDto(userByID);
+        return updatedUserDto;
     }
     @Override
     public void deleteUserById(Long id){
         userRespository.deleteById(id);
     }
-
-
 
 }
