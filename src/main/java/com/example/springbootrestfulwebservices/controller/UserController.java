@@ -1,8 +1,6 @@
 package com.example.springbootrestfulwebservices.controller;
 
-import com.example.springbootrestfulwebservices.dto.UserDto;
-import com.example.springbootrestfulwebservices.entity.User;
-import com.example.springbootrestfulwebservices.mapper.UserMapper;
+import com.example.springbootrestfulwebservices.dto.UserDtoRecord;
 import com.example.springbootrestfulwebservices.service.implementation.UserServiceImplementation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,26 +17,26 @@ public class UserController {
     private UserServiceImplementation userServiceImplementation;
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
-        UserDto createdUser = userServiceImplementation.createUser(user);
+    public ResponseEntity<UserDtoRecord> createUser(@RequestBody UserDtoRecord user) {
+        UserDtoRecord createdUser = userServiceImplementation.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        UserDto userDto = userServiceImplementation.getUserById(id);
+    public ResponseEntity<UserDtoRecord> getUserById(@PathVariable Long id) {
+        UserDtoRecord userDto = userServiceImplementation.getUserById(id);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> users = userServiceImplementation.getAllUsers();
+    public ResponseEntity<List<UserDtoRecord>> getAllUsers() {
+        List<UserDtoRecord> users = userServiceImplementation.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUserById(@PathVariable Long id, @RequestBody UserDto user) {
-        UserDto updatedUser = userServiceImplementation.updateUserById(id, user);
+    public ResponseEntity<UserDtoRecord> updateUserById(@PathVariable Long id, @RequestBody UserDtoRecord user) {
+        UserDtoRecord updatedUser = userServiceImplementation.updateUserById(id, user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 

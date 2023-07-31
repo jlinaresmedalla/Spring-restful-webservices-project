@@ -1,5 +1,6 @@
 package com.example.springbootrestfulwebservices.entity;
 
+import com.example.springbootrestfulwebservices.dto.UserDtoRecord;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,4 +24,12 @@ public class User {
     @NonNull
     @Column(nullable = false, unique = true)
     private String email;
+
+    public User(UserDtoRecord userDtoRecord) {
+        this(userDtoRecord.id(), userDtoRecord.firstName(), userDtoRecord.lastName(), userDtoRecord.email());
+//        this.firstName = userDtoRecord.firstName();
+//        this.lastName = userDtoRecord.lastName();
+//        this.email = userDtoRecord.email();
+    }
+
 }
