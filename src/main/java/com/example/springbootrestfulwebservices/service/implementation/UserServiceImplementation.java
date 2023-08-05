@@ -2,6 +2,8 @@ package com.example.springbootrestfulwebservices.service.implementation;
 
 import com.example.springbootrestfulwebservices.dto.UserDtoRecord;
 import com.example.springbootrestfulwebservices.entity.User;
+import com.example.springbootrestfulwebservices.exception.EmailAlreadyExistsException;
+import com.example.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.example.springbootrestfulwebservices.repository.UserRespository;
 import com.example.springbootrestfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,11 @@ public class UserServiceImplementation implements UserService {
     @Override
     public UserDtoRecord createUser(UserDtoRecord userDtoRecord) {
         //Convert UserDto to User entity object JPA
+        Optional<User> optionalUser = userRespository.findByEmail(userDtoRecord.email());
+        if (optionalUser.isPresent()) {
+            throw new EmailAlreadyExistsException("Email already exists for user");
+        }
+
         User user = new User(userDtoRecord);
         User createdUser = userRespository.save(user);
         //Convert User entity object JPA to UserDto
@@ -30,7 +37,10 @@ public class UserServiceImplementation implements UserService {
     }
     @Override
     public UserDtoRecord getUserById(Long id){
-        User user = userRespository.findById(id).get();
+        User user = userRespository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("User","id", id)
+        );// this is a lambda expression that is used to throw an exception if the user is not found
+        //orElseThrow is a method that is used to throw an exception if the user is not found
         UserDtoRecord userDtoRecord = new UserDtoRecord(user);
         return userDtoRecord;
     }
@@ -46,8 +56,10 @@ public class UserServiceImplementation implements UserService {
         return allUsersDtoRecords;
     }
     @Override
-    public UserDtoRecord updateUserById(Long id, UserDtoRecord userDtoRecord){
-        User userByID = userRespository.findById(id).get();
+    public UserDtoRecord updateUserById(UserDtoRecord userDtoRecord){
+        User userByID = userRespository.findById(userDtoRecord.id()).orElseThrow(
+                () -> new ResourceNotFoundException("User","id", userDtoRecord.id())
+        );;
         userByID.setFirstName(userDtoRecord.firstName());
         userByID.setLastName(userDtoRecord.lastName());
         userByID.setEmail(userDtoRecord.email());
@@ -57,6 +69,9 @@ public class UserServiceImplementation implements UserService {
     }
     @Override
     public void deleteUserById(Long id){
+        User userByID = userRespository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("User","id", id)
+        );;
         userRespository.deleteById(id);
     }
 

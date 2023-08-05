@@ -10,6 +10,6 @@ public interface UserService {
     UserDtoRecord createUser(UserDtoRecord user);
     UserDtoRecord getUserById(Long id);
     List<UserDtoRecord> getAllUsers();
-    UserDtoRecord updateUserById(Long id, UserDtoRecord user);
+    UserDtoRecord updateUserById(UserDtoRecord user);
     void deleteUserById(Long id);
 }

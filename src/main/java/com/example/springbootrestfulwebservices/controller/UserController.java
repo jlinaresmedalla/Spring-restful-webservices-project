@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -35,8 +37,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDtoRecord> updateUserById(@PathVariable Long id, @RequestBody UserDtoRecord user) {
-        UserDtoRecord updatedUser = userServiceImplementation.updateUserById(id, user);
+    public ResponseEntity<UserDtoRecord> updateUserById(@PathVariable long id, @RequestBody UserDtoRecord userDto) {
+        userDto = new UserDtoRecord(id, userDto.firstName(), userDto.lastName(), userDto.email());
+        UserDtoRecord updatedUser = userServiceImplementation.updateUserById(userDto);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
@@ -45,5 +48,16 @@ public class UserController {
         userServiceImplementation.deleteUserById(id);
         return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
     }
+
+//    @ExceptionHandler(ResourceNotFoundException.class)
+//    public ResponseEntity<ErrorDetails> resourceNotFoundExceptionHandler(ResourceNotFoundException exception, WebRequest WebRequest) {
+//        ErrorDetails errorDetails = new ErrorDetails(
+//                LocalDateTime.now(),
+//                exception.getMessage(),
+//                WebRequest.getDescription(false),
+//                "USER_NOT_FOUND"
+//        );
+//        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+//    }
 
 }
