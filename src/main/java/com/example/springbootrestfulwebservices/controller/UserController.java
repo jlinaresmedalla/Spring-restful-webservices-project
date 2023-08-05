@@ -2,12 +2,11 @@ package com.example.springbootrestfulwebservices.controller;
 
 import com.example.springbootrestfulwebservices.dto.UserDtoRecord;
 import com.example.springbootrestfulwebservices.service.implementation.UserServiceImplementation;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class UserController {
     private UserServiceImplementation userServiceImplementation;
 
     @PostMapping("/create")
-    public ResponseEntity<UserDtoRecord> createUser(@RequestBody UserDtoRecord user) {
+    public ResponseEntity<UserDtoRecord> createUser(@RequestBody @Valid UserDtoRecord user) {
         UserDtoRecord createdUser = userServiceImplementation.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -37,7 +36,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDtoRecord> updateUserById(@PathVariable long id, @RequestBody UserDtoRecord userDto) {
+    public ResponseEntity<UserDtoRecord> updateUserById(@PathVariable long id, @RequestBody @Valid UserDtoRecord userDto) {
         userDto = new UserDtoRecord(id, userDto.firstName(), userDto.lastName(), userDto.email());
         UserDtoRecord updatedUser = userServiceImplementation.updateUserById(userDto);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
